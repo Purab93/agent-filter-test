@@ -15,7 +15,8 @@ export default class Part2 extends React.Component {
         .then(Axios.spread((callListData, listLblData) => {
             let callList = callListData.data.data.call_data;
             let unqLblList = listLblData.data.data.unique_label_list;
-            this.getApplyLbl(callList,unqLblList);
+
+            this.setState({callList,unqLblList});
         })).catch(()=>{
             console.log('some error while fetching request')
         });
@@ -70,14 +71,11 @@ export default class Part2 extends React.Component {
 
     render(){
         const columns = [{
-            Header: 'Agent Name',
-            accessor: 'agent_id' // String-based value accessors!
-        }, {
             Header: 'Call Id',
-            accessor: 'call_id'
-        }, {// Required because our accessor is not a string
-            Header: 'Call Time',
-            accessor: 'call_time'
+            accessor: 'call_id' // String-based value accessors!
+        }, {
+            Header: 'Label Id',
+            accessor: 'label_id'
         }];
         const tabConfig = {
             showPagination: true,
@@ -98,7 +96,7 @@ export default class Part2 extends React.Component {
             <div className="container-part1">
                 {this.state? 
                     <>
-                        <MultiSelect
+                        {/* <MultiSelect
                             id="some-id"
                             enableSearch= {true}
                             valuePlaceholder="Filter using Agent Name"
@@ -106,10 +104,10 @@ export default class Part2 extends React.Component {
                             options={this.getSelOpts()}
                             value={this.state.selValue}
                             onChange={this.multiSelectVal}
-                        />
+                        /> */}
                         <ReactTable 
                             {...tabConfig}
-                            data={this.state.agentListData} 
+                            data={this.state.callList} 
                             columns={columns} 
                         /> 
                     </>:<></>}
