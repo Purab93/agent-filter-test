@@ -1,7 +1,8 @@
 import React from 'react';
 import Axios from 'axios';
 import ReactTable from "react-table";
-import { MultiSelect } from 'react-sm-select';
+import { Button } from 'react-bootstrap';
+import EditModal from './components/list_edit_modal';
 
 import 'react-table/react-table.css';
 import 'react-sm-select/dist/styles.css';
@@ -9,6 +10,19 @@ import 'react-sm-select/dist/styles.css';
 
 
 export default class Part2 extends React.Component {
+
+    constructor(props){
+        super(props);
+        this.state = {
+            checked: [],
+            modalData: {
+                show: false,
+                callDetails: {
+
+                }
+            }
+        }
+    }
     
     componentWillMount(){
         Axios.all([this.getCallLst(),this.getListLbl()])
@@ -50,23 +64,14 @@ export default class Part2 extends React.Component {
         });
     }
 
-    getSelOpts(){
-        return this.state.agentList.map((val) => {
-            return {
-                value: val,
-                label: val
+    handleModifyClick = (value)=>{
+        let callVal = this.state.callList[value];
+        this.setState({
+            modalData: {
+                show: true,
+                callDetails: callVal
             }
-        })
-    }
-
-    multiSelectVal= (selValue) => {
-        let agentListData = this.state.agentAllData.filter((value)=>{
-            if(selValue.indexOf(value.agent_id) >= 0){
-                return true;
-            }
-            return false;
         });
-        this.setState({selValue,agentListData});
     }
 
     render(){
@@ -76,7 +81,14 @@ export default class Part2 extends React.Component {
         }, {
             Header: 'Label Id',
             accessor: 'label_id'
-        }];
+        },{
+            Header: 'Actions',
+            Cell: row => (
+                <Button variant="primary" className="modify-btn" onClick={()=>{this.handleModifyClick(row.index);}}>Modify</Button>
+            ),
+            sortable: false,
+            filterable: false
+          }];
         const tabConfig = {
             showPagination: true,
             showPageSizeOptions: true,
@@ -96,20 +108,12 @@ export default class Part2 extends React.Component {
             <div className="container-part1">
                 {this.state? 
                     <>
-                        {/* <MultiSelect
-                            id="some-id"
-                            enableSearch= {true}
-                            valuePlaceholder="Filter using Agent Name"
-                            searchPlaceholder = "Search Agent Name"
-                            options={this.getSelOpts()}
-                            value={this.state.selValue}
-                            onChange={this.multiSelectVal}
-                        /> */}
                         <ReactTable 
                             {...tabConfig}
                             data={this.state.callList} 
                             columns={columns} 
                         /> 
+                        <EditModal {...this.state.modalData}/>
                     </>:<></>}
             </div>
         );
