@@ -17,9 +17,7 @@ export default class Part2 extends React.Component {
             checked: [],
             modalData: {
                 show: false,
-                callDetails: {
-
-                }
+                callDetails: {}
             }
         }
     }
@@ -74,6 +72,16 @@ export default class Part2 extends React.Component {
         });
     }
 
+    updateLabels = (labelDetails) => {
+        debugger;
+        this.setState({
+            modalData: {
+                show: false,
+                callDetails: {}
+            }
+        });
+    }
+
     render(){
         const columns = [{
             Header: 'Call Id',
@@ -113,7 +121,7 @@ export default class Part2 extends React.Component {
                             data={this.state.callList} 
                             columns={columns} 
                         /> 
-                        <EditModal {...this.state.modalData}/>
+                        <EditModal {...this.state.modalData} updateLabels={this.updateLabels}/>
                     </>:<></>}
             </div>
         );

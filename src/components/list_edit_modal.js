@@ -1,22 +1,37 @@
 import React from 'react';
 import Axios from 'axios';
 import { Modal, Button } from 'react-bootstrap';
+import ListRow from './list_row';
 
 export default class editModal extends  React.Component  {
     constructor(props, context) {
         super(props, context);
         this.state = {
             show: this.props.show,
+            lblsCollection: this.props.callDetails.label_id
         };
     }
 
     handleClose = () => {
-        this.setState({ show: false });
+        this.props.updateLabels();
     }
 
-    handleShow = () => {
-        this.setState({ show: true });
+    addLabel = (labelDetails) =>{
+        
     }
+
+    getLabels(){
+        return (
+            <>
+                {
+                    this.state.lblsCollection.map(function(index,value){
+                        return (<ListRow key={index} lblVal={value} addLabel={this.addLabel}/>);
+                    })
+                }
+            </>
+        );
+    }
+
     render(){
         return(
             <Modal
@@ -29,6 +44,7 @@ export default class editModal extends  React.Component  {
                 <Modal.Title>Call Id <span className="modal-title-pkg-name">{this.props.callDetails.call_id}</span></Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                {this.getLabels()}
                 {JSON.stringify(this.props.callDetails.label_id)}
             </Modal.Body>
             <Modal.Footer>
